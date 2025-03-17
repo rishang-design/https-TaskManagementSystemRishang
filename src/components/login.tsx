@@ -4,6 +4,7 @@ import React from 'react'
 
 const Login = () => {
   const googleLogin = async () => {
+    console.log(import.meta.env.VITE_FIREBASE_API_KEY);
     const provider = new GoogleAuthProvider();
     
     signInWithPopup(auth, provider)
