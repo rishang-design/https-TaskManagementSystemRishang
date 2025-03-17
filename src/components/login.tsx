@@ -10,11 +10,11 @@ const Login = () => {
     signInWithPopup(auth, provider)
     .then(async(result) => {
         console.log(result);
-    //     if(result.user){
-    //         alert("Login Successful");
-    //     }
+        if(result.user){
+            alert("Login Successful");
+        }
     });
-    // window.location.href = "/tasklist";
+    window.location.href = "/tasklist";
     
   };
 // const Login = () => {
