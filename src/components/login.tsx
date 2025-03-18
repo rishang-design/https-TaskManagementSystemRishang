@@ -17,22 +17,7 @@ const Login = () => {
     window.location.href = "/tasklist";
     
   };
-// const Login = () => {
-//   const googleLogin = async () => {
-//     const provider = new GoogleAuthProvider();
-//     try {
-//       const result = await signInWithPopup(auth, provider);
-//       console.log(result);
-//       alert("Login Successful");
-//     } catch (error: unknown) {
-//       console.error("Error during login:", error);
-//       if (error instanceof Error) {
-//         alert("Login Failed: " + error.message);
-//       } else {
-//         alert("Login Failed: An unknown error occurred");
-//       }
-//     }
-//   };
+
 
   return (
     <div className="flex min-h-screen">
