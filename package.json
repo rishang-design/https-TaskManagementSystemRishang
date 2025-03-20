@@ -16,6 +16,8 @@
     "firebase": "^11.4.0",
     "googleauth": "^3.0.2",
     "react": "^19.0.0",
+    "react-dnd": "^16.0.1",
+    "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^19.0.0",
     "react-icons": "^5.5.0",
     "react-router-dom": "^7.3.0"

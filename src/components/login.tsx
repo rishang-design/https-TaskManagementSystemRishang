@@ -1,23 +1,44 @@
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { auth } from '../firebase';
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
-  const googleLogin = async () => {
-    console.log(import.meta.env.VITE_FIREBASE_API_KEY);
-    const provider = new GoogleAuthProvider();
-    
-    signInWithPopup(auth, provider)
-    .then(async(result) => {
-        console.log(result);
-        if(result.user){
-            alert("Login Successful");
-        }
-    });
-    window.location.href = "/tasklist";
-    
-  };
+  const navigate = useNavigate();
 
+  // Add authentication check
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        // If user is already logged in, redirect to tasklist
+        navigate('/tasklist');
+      }
+    });
+
+    // Cleanup subscription
+    return () => unsubscribe();
+  }, [navigate]);
+
+  const googleLogin = async () => {
+    try {
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+      
+      if (result.user) {
+        // Get user info
+        const userName = result.user.displayName || result.user.email?.split('@')[0] || 'User';
+        
+        // Store user info if needed
+        localStorage.setItem('userName', userName);
+        
+        // Navigate using React Router
+        navigate('/tasklist', { replace: true });
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      alert('Login failed. Please try again.');
+    }
+  };
 
   return (
     <div className="flex min-h-screen">
