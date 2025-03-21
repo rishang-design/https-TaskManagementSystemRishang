@@ -62,6 +62,8 @@ const TaskList: React.FC = () => {
     }
   }, []);
 
+  console.log(dueDateSort);
+
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
   }, [tasks]);
@@ -356,6 +358,8 @@ const TaskList: React.FC = () => {
       )
     );
   };
+
+  console.log(handleDueDateSort);
 
   return (
     <div className="min-h-screen bg-white-100 p-2 sm:p-4 md:p-6">
