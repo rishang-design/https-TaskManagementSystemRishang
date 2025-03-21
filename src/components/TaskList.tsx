@@ -3,19 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { CgProfile } from "react-icons/cg";
 import { CiViewBoard } from "react-icons/ci";
-import {
-  FaSearch,
-  FaChevronDown,
-  FaChevronUp,
-  FaTrash,
-  FaBars,
-  FaSort,
-  FaSignOutAlt,
-  FaEdit,
-  FaCheckSquare,
-  FaRegSquare,
-  FaTrashAlt,
-} from "react-icons/fa";
+import {FaSearch, FaChevronDown, FaChevronUp, FaTrash, FaBars, FaSort, FaSignOutAlt, FaEdit, FaCheckSquare, FaRegSquare, FaTrashAlt} from "react-icons/fa";
 import { auth } from '../firebase';
 import { signOut } from 'firebase/auth';
 
@@ -67,7 +55,6 @@ const TaskList: React.FC = () => {
   const [selectedTasks, setSelectedTasks] = useState<number[]>([]);
   const navigate = useNavigate();
 
-  // Load tasks from local storage on mount
   useEffect(() => {
     const storedTasks = localStorage.getItem("tasks");
     if (storedTasks) {
@@ -75,12 +62,10 @@ const TaskList: React.FC = () => {
     }
   }, []);
 
-  // Save tasks to local storage
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
   }, [tasks]);
 
-  // Keep only the auth check useEffect
   useEffect(() => {
     const user = auth.currentUser;
     if (user) {
@@ -219,23 +204,19 @@ const TaskList: React.FC = () => {
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      // Remove only auth-related data
       localStorage.removeItem('userName');
-      // Keep tasks data in localStorage
       navigate('/', { replace: true });
     } catch (error) {
       console.error('Error logging out:', error);
       alert('Error logging out. Please try again.');
     }
   };
-
-  // Add this new function to handle edit
+ 
   const handleEdit = (task: Task) => {
     setEditingTask(task);
     setShowEditModal(true);
   };
 
-  // Add this function to handle update
   const updateTask = () => {
     if (!editingTask) return;
     
@@ -253,7 +234,6 @@ const TaskList: React.FC = () => {
     setEditingTask(null);
   };
 
-  // Add these new functions for batch operations
   const toggleTaskSelection = (taskId: number) => {
     setSelectedTasks(prev => 
       prev.includes(taskId) 
@@ -268,10 +248,8 @@ const TaskList: React.FC = () => {
     setSelectedTasks(prev => {
       const allSelected = sectionTaskIds.every(id => prev.includes(id));
       if (allSelected) {
-        // Deselect all tasks in this section
         return prev.filter(id => !sectionTaskIds.includes(id));
       } else {
-        // Select all tasks in this section
         return [...new Set([...prev, ...sectionTaskIds])];
       }
     });
@@ -282,11 +260,10 @@ const TaskList: React.FC = () => {
     
     if (window.confirm(`Are you sure you want to delete ${selectedTasks.length} tasks?`)) {
       setTasks(prev => prev.filter(task => !selectedTasks.includes(task.id)));
-      setSelectedTasks([]); // Clear selection after delete
+      setSelectedTasks([]);
     }
   };
 
-  // Modify your existing renderTaskActions function
   const renderTaskActions = (task: Task) => (
     <div className="flex items-center gap-2">
       <button
@@ -323,7 +300,6 @@ const TaskList: React.FC = () => {
     </div>
   );
 
-  // Add this section header component
   const renderSectionHeader = (section: string) => {
     const sectionTasks = renderTasks(section);
     const allSelected = sectionTasks.length > 0 && 
@@ -354,7 +330,6 @@ const TaskList: React.FC = () => {
     );
   };
 
-  // Add these new functions at the component level
   const handleDragStart = (e: React.DragEvent, task: Task) => {
     e.dataTransfer.setData('taskId', task.id.toString());
   };
@@ -377,7 +352,7 @@ const TaskList: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-2 sm:p-4 md:p-6">
+    <div className="min-h-screen bg-white-100 p-2 sm:p-4 md:p-6">
       {/* Header Section */}
       <div className="flex flex-col sm:flex-row justify-between items-center gap-3 mb-4 sm:mb-6">
         <div className="flex items-center gap-3 w-full sm:w-auto justify-center sm:justify-start">
@@ -424,12 +399,13 @@ const TaskList: React.FC = () => {
           </button>
         </div>
 
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 bg-white p-2 sm:p-3 rounded-md">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full sm:w-auto">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-4 bg-white p-2 sm:p-3 rounded-md">
+          {/* Filter section - Left side */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
             <p className="text-gray-500 text-sm sm:text-base">Filter by:</p>
-            <div className="flex flex-wrap gap-2 w-full sm:w-auto">
+            <div className="flex flex-wrap gap-2">
               <select 
-                className="p-2 text-gray-500 border rounded-3xl shadow-md text-sm sm:text-base w-full sm:w-auto"
+                className="p-2 text-gray-500 border rounded-3xl shadow-md text-sm sm:text-base"
                 value={filterCategory}
                 onChange={(e) => setFilterCategory(e.target.value)}
               >
@@ -439,7 +415,7 @@ const TaskList: React.FC = () => {
                 <option value="Development">Development</option>
               </select>
               <select 
-                className="p-2 text-gray-500 border rounded-3xl shadow-md text-sm sm:text-base w-full sm:w-auto"
+                className="p-2 text-gray-500 border rounded-3xl shadow-md text-sm sm:text-base"
                 value={sortConfig.key === 'dueDate' ? sortConfig.direction : ''}
                 onChange={(e) => {
                   if (e.target.value) {
@@ -457,8 +433,9 @@ const TaskList: React.FC = () => {
             </div>
           </div>
 
-          <div className="flex items-center gap-2 w-full sm:w-auto">
-            <div className="relative flex-1 sm:w-64">
+          {/* Search and Add Task - Right side */}
+          <div className="flex items-center gap-2 ml-auto">
+            <div className="relative w-64">
               <input
                 type="text"
                 placeholder="Search"
@@ -474,7 +451,7 @@ const TaskList: React.FC = () => {
             </div>
             <button
               onClick={() => setShowModal(true)}
-              className="bg-purple-600 text-white px-3 py-1 sm:px-4 sm:py-2 rounded-3xl hover:bg-purple-700 shadow-md transition text-sm sm:text-base"
+              className="bg-purple-600 text-white px-3 py-1 sm:px-4 sm:py-2 rounded-3xl hover:bg-purple-700 shadow-md transition text-sm sm:text-base whitespace-nowrap"
             >
               ADD TASK
             </button>
@@ -485,7 +462,6 @@ const TaskList: React.FC = () => {
       {/* Add batch actions bar */}
       <div className="flex justify-between items-center mb-4 bg-white p-3 rounded-md shadow-md">
         <div className="flex items-center gap-4">
-          {/* Existing view toggle buttons */}
         </div>
         {selectedTasks.length > 0 && (
           <div className="flex items-center gap-2">
@@ -545,7 +521,7 @@ const TaskList: React.FC = () => {
               </div>
 
               {!isCollapsed[section] && (
-                <div className="p-4 bg-white shadow-lg rounded-lg">
+                <div className="p-4 bg-gray-100 shadow-lg rounded-lg">
                   {renderTasks(section).length > 0 ? (
                     filteredAndSortedTasks(section).map((task) => (
                       <div
