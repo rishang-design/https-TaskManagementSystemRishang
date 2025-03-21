@@ -99,7 +99,7 @@ const TaskList: React.FC = () => {
     if (e.target.files && e.target.files[0]) {
       setNewTask((prev) => ({
         ...prev,
-        description: e.target.files[0].name,
+        description: e.target.files?.[0]?.name || '',
       }));
     }
   };
@@ -136,10 +136,16 @@ const TaskList: React.FC = () => {
     if (!sortConfig.key) return tasks;
 
     return [...tasks].sort((a, b) => {
-      if (a[sortConfig.key!] < b[sortConfig.key!]) {
+      const key = sortConfig.key as keyof Task;
+      const aValue = a[key];
+      const bValue = b[key];
+      
+      if (aValue === undefined || bValue === undefined) return 0;
+      
+      if (aValue < bValue) {
         return sortConfig.direction === 'asc' ? -1 : 1;
       }
-      if (a[sortConfig.key!] > b[sortConfig.key!]) {
+      if (aValue > bValue) {
         return sortConfig.direction === 'asc' ? 1 : -1;
       }
       return 0;
