@@ -367,7 +367,7 @@ const TaskList: React.FC = () => {
       <div className="flex flex-col sm:flex-row justify-between items-center gap-3 mb-4 sm:mb-6">
         <div className="flex items-center gap-3 w-full sm:w-auto justify-center sm:justify-start">
           <img
-            src="./src/assets/tasklogo.png"
+            src="/assets/tasklogo.png"
             alt="tasklistlogo"
             className="w-6 h-6 sm:w-8 sm:h-8"
           />
